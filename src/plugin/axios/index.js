@@ -45,7 +45,10 @@ service.interceptors.request.use(
     // 在请求发送之前做一些处理
     const token = util.cookies.get('token')
     // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
-    config.headers['X-Token'] = token
+    if (token && token !== 'undefined') {
+      // 让每个请求携带token-- ['Authorization']为自定义key 请根据实际情况自行修改
+      config.headers['Authorization'] = 'Bearer ' + token
+    }
     return config
   },
   error => {
@@ -61,7 +64,7 @@ service.interceptors.response.use(
     // dataAxios 是 axios 返回数据中的 data
     const dataAxios = response.data
     // 这个状态码是和后端约定的
-    const { code } = dataAxios
+    const code = dataAxios.statusCode
     // 根据 code 进行判断
     if (code === undefined) {
       // 如果没有 code 代表这不是项目后端开发的接口 比如可能是 D2Admin 请求最新版本
@@ -69,7 +72,7 @@ service.interceptors.response.use(
     } else {
       // 有 code 代表这是一个后端接口 可以进行进一步的判断
       switch (code) {
-        case 0:
+        case 200:
           // [ 示例 ] code === 0 代表没有错误
           return dataAxios.data
         case 'xxx':

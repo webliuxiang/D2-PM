@@ -64,14 +64,26 @@ const frameIn = [
         path: 'refresh',
         name: 'refresh',
         hidden: true,
-        component: _import('system/function/refresh')
+        component: {
+          beforeRouteEnter (to, from, next) {
+            console.log(to);
+            console.log(from);
+            next(vm => vm.$router.replace(from.fullPath))
+          },
+          render: h => h()
+        }
       },
       // 页面重定向 必须保留
       {
         path: 'redirect/:route*',
         name: 'redirect',
         hidden: true,
-        component: _import('system/function/redirect')
+        component: {
+          beforeRouteEnter (to, from, next) {
+            next(vm => vm.$router.replace(JSON.parse(from.params.route)))
+          },
+          render: h => h()
+        }
       }
     ]
   }

@@ -1,7 +1,7 @@
 import { Message, MessageBox } from 'element-ui'
 import util from '@/libs/util.js'
 import router from '@/router'
-import { AccountLogin } from '@api/sys.login'
+import { AccountLogin } from '@/api/sys/login'
 
 export default {
   namespaced: true,
@@ -29,8 +29,8 @@ export default {
             // uuid 是用户身份唯一标识 用户注册的时候确定 并且不可改变 不可重复
             // token 代表用户当前登录状态 建议在网络请求中携带 token
             // 如有必要 token 需要定时更新，默认保存一天
-            util.cookies.set('uuid', res.uuid)
-            util.cookies.set('token', res.token)
+            util.cookies.set('uuid', res.id)
+            util.cookies.set('token', res.accessToken)
             // 设置 vuex 用户信息
             await dispatch('d2admin/user/set', {
               name: res.name
