@@ -21,33 +21,85 @@ const frameIn = [
         },
         component: _import('system/index')
       },
-      // 演示页面
+      // 个人中心
       {
-        path: 'page1',
-        name: 'page1',
+        path: 'userCenter',
+        name: 'userCenter',
         meta: {
-          title: '页面 1',
+          title: '个人中心',
           auth: true
         },
-        component: _import('demo/page1')
+        component: _import('userCenter/index')
       },
+      // 课程报名
       {
-        path: 'page2',
-        name: 'page2',
+        path: 'courseRegistration',
+        name: 'courseRegistration',
         meta: {
-          title: '页面 2',
+          title: '课程报名',
           auth: true
         },
-        component: _import('demo/page2')
+        component: _import('courseInfo/courseRegistration')
       },
+      // 培训记录
       {
-        path: 'page3',
-        name: 'page3',
+        path: 'trainingRecords',
+        name: 'trainingRecords',
         meta: {
-          title: '页面 3',
+          title: '培训记录',
           auth: true
         },
-        component: _import('demo/page3')
+        component: _import('courseInfo/trainingRecords')
+      },
+      // 培训计划
+      {
+        path: 'trainingPlan',
+        name: 'trainingPlan',
+        meta: {
+          title: '培训计划',
+          auth: true
+        },
+        component: _import('courseInfo/trainingPlan')
+      },
+      // 考试
+      {
+        path: 'examination',
+        name: 'examination',
+        meta: {
+          title: '考试',
+          auth: true
+        },
+        component: _import('examination')
+      },
+      // 公告
+      {
+        path: 'notice',
+        name: 'notice',
+        meta: {
+          title: '公告',
+          auth: true
+        },
+        component: _import('notice')
+      },
+      // 模板下载
+      {
+        path: 'templateDownload',
+        name: 'templateDownload',
+        meta: {
+          title: '模板下载',
+          auth: true
+        },
+        component: _import('templateDownload')
+      },
+      // 知识库
+      {
+        path: 'knowledgeBase',
+        name: 'knowledgeBase',
+        meta: {
+          title: '知识库',
+          auth: true
+        },
+        component: _import('knowledgeBase')
       },
       // 系统 前端日志
       {
@@ -66,8 +118,6 @@ const frameIn = [
         hidden: true,
         component: {
           beforeRouteEnter (to, from, next) {
-            console.log(to);
-            console.log(from);
             next(vm => vm.$router.replace(from.fullPath))
           },
           render: h => h()

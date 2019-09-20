@@ -9,13 +9,14 @@ export default {
     menuMixin
   ],
   render (createElement) {
+    // 设置固定侧边栏 fixedAside
     return createElement('div', { attrs: { class: 'd2-layout-header-aside-menu-side' } }, [
       createElement('el-menu', {
         props: { collapse: this.asideCollapse, uniqueOpened: true, defaultActive: this.active },
         ref: 'menu',
         on: { select: this.handleMenuSelect }
-      }, this.aside.map(menu => (menu.children === undefined ? elMenuItem : elSubmenu).call(this, createElement, menu))),
-      ...this.aside.length === 0 && !this.asideCollapse ? [
+      }, this.fixedAside.map(menu => (menu.children === undefined ? elMenuItem : elSubmenu).call(this, createElement, menu))),
+      ...this.fixedAside.length === 0 && !this.asideCollapse ? [
         createElement('div', { attrs: { class: 'd2-layout-header-aside-menu-empty', flex: 'dir:top main:center cross:center' } }, [
           createElement('d2-icon', { props: { name: 'inbox' } }),
           createElement('span', {}, '没有侧栏菜单')
@@ -33,6 +34,8 @@ export default {
   computed: {
     ...mapState('d2admin/menu', [
       'aside',
+      // 设置固定侧边栏
+      'fixedAside',
       'asideCollapse'
     ])
   },

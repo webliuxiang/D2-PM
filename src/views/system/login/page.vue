@@ -141,12 +141,12 @@ export default {
         {
           name: 'Editor',
           username: 'editor',
-          password: 'editor'
+          password: 'admin'
         },
         {
-          name: 'User1',
-          username: 'user1',
-          password: 'user1'
+          name: 'User',
+          username: 'user',
+          password: 'admin'
         }
       ],
       // 表单

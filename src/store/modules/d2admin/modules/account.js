@@ -13,7 +13,7 @@ export default {
      * @param {Object} payload password {String} 密码
      * @param {Object} payload route {Object} 登录成功后定向的路由对象 任何 vue-router 支持的格式
      */
-    login ({ dispatch }, {
+    login({ dispatch }, {
       username = '',
       password = ''
     } = {}) {
@@ -51,11 +51,11 @@ export default {
      * @param {Object} context
      * @param {Object} payload confirm {Boolean} 是否需要确认
      */
-    logout ({ commit, dispatch }, { confirm = false } = {}) {
+    logout({ commit, dispatch }, { confirm = false } = {}) {
       /**
        * @description 注销
        */
-      async function logout () {
+      async function logout() {
         // 删除cookie
         util.cookies.remove('token')
         util.cookies.remove('uuid')
@@ -92,7 +92,7 @@ export default {
      * @description 用户登录后从持久化数据加载一系列的设置
      * @param {Object} context
      */
-    load ({ dispatch }) {
+    load({ dispatch }) {
       return new Promise(async resolve => {
         // DB -> store 加载用户名
         await dispatch('d2admin/user/load', null, { root: true })
@@ -101,7 +101,7 @@ export default {
         // DB -> store 加载页面过渡效果设置
         await dispatch('d2admin/transition/load', null, { root: true })
         // DB -> store 持久化数据加载上次退出时的多页列表
-        await dispatch('d2admin/page/openedLoad', null, { root: true })
+        // await dispatch('d2admin/page/openedLoad', null, { root: true })
         // DB -> store 持久化数据加载侧边栏折叠状态
         await dispatch('d2admin/menu/asideCollapseLoad', null, { root: true })
         // DB -> store 持久化数据加载全局尺寸

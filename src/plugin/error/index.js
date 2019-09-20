@@ -6,7 +6,6 @@ export default {
     Vue.config.errorHandler = function (error, instance, info) {
       Vue.nextTick(() => {
         // store 追加 log
-        console.log(error);
         store.dispatch('d2admin/log/push', {
           message: `${info}: ${error.message}`,
           type: 'danger',

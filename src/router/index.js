@@ -13,7 +13,7 @@ import util from '@/libs/util.js'
 import routes from './routes'
 
 // 固定菜单与路由
-import menuHeader from '@/menu/header'
+// import menuHeader from '@/menu/header'
 import menuAside from '@/menu/aside'
 import { frameInRoutes } from '@/router/routes'
 
@@ -56,7 +56,6 @@ let fetchPermissionInfo = async () => {
 
   try {
     let userPermissionInfo = await userService.getUserPermissionInfo()
-    console.log(userPermissionInfo);
     permissionMenu = userPermissionInfo.accessMenus
     permissionRouter = userPermissionInfo.accessRoutes
     permission.functions = userPermissionInfo.userPermissions
@@ -66,8 +65,12 @@ let fetchPermissionInfo = async () => {
   } catch (ex) {
     console.log(ex)
   }
-  console.log(permission);
-  console.log(store);
+  // console.log(store.state.d2admin.menu.fullAside);
+  // console.log(store.state.d2admin.menu);
+  // console.log(store.state.d2admin.user);
+  // console.log(store.state.d2admin.permission);
+  // console.log(store.state.d2admin.db);
+  // console.log(menuAside);
 
   // 组合代码生成器生成的菜单和路由
   permissionMenu = [...permissionMenu, ...autoGenerateMenusAndRouters.menus]
@@ -75,7 +78,7 @@ let fetchPermissionInfo = async () => {
 
   formatRoutes(permissionRouter)
   let allMenuAside = [...menuAside, ...permissionMenu]
-  let allMenuHeader = [...menuHeader, ...permissionMenu]
+  let allMenuHeader = [...permissionMenu]
   // 动态添加路由
   router.addRoutes(permissionRouter)
   // 处理路由 得到每一级的路由设置
@@ -90,27 +93,32 @@ let fetchPermissionInfo = async () => {
   store.commit('d2admin/permission/set', permission)
   // 加载上次退出时的多页列表
   store.dispatch('d2admin/page/openedLoad')
+  // 确认已经加载多标签页数据
+  store.dispatch('d2admin/page/isLoaded')
+  // 确认已经加载组件尺寸设置
+  store.dispatch('d2admin/size/isLoaded')
   await Promise.resolve()
 }
-
+// 免校验token白名单
+let whiteList = ['/login']
 /**
  * 路由拦截
  * 权限验证
  */
 router.beforeEach(async (to, from, next) => {
   // 确认已经加载多标签页数据 https://github.com/d2-projects/d2-admin/issues/201
-  await store.dispatch('d2admin/page/isLoaded')
+  // await store.dispatch('d2admin/page/isLoaded')
   // 确认已经加载组件尺寸设置 https://github.com/d2-projects/d2-admin/issues/198
-  await store.dispatch('d2admin/size/isLoaded')
+  // await store.dispatch('d2admin/size/isLoaded')
   // 进度条
   NProgress.start()
   // 关闭搜索面板
   store.commit('d2admin/search/set', false)
   // 验证当前路由所有的匹配中是否需要有登录验证的
-  if (to.matched.some(r => r.meta.auth)) {
+  const token = util.cookies.get('token')
+  if (whiteList.indexOf(to.path) === -1) {
     // 这里暂时将cookie里是否存有token作为验证是否登录的条件
     // 请根据自身业务需要修改
-    const token = util.cookies.get('token')
     if (token && token !== 'undefined') {
       // 拉取权限信息
       if (!isFetchPermissionInfo) {
@@ -123,6 +131,7 @@ router.beforeEach(async (to, from, next) => {
     } else {
       // 没有登录的时候跳转到登录界面
       // 携带上登陆成功之后需要跳转的页面完整路径
+      util.cookies.set('redirect', to.fullPath)
       next({
         name: 'login',
         query: {
@@ -134,7 +143,17 @@ router.beforeEach(async (to, from, next) => {
     }
   } else {
     // 不需要身份校验 直接通过
-    next()
+    if (to.name === 'login') {
+      // 如果已经登录，则直接进入系统
+      if (token && token !== undefined) {
+        next(from.path, true)
+        NProgress.done()
+      } else {
+        next()
+      }
+    } else {
+      next()
+    }
   }
 })
 

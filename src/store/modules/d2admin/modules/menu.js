@@ -24,6 +24,7 @@ export default {
     header: [],
     // 侧栏菜单
     aside: [],
+    fixedAside: [],
     fullAside: [],
     // 侧边栏收缩
     asideCollapse: setting.menu.asideCollapse
@@ -105,9 +106,14 @@ export default {
       // store 赋值
       state.aside = supplementMenuPath(menu)
     },
+    fixedAsideSet (state, menu) {
+      // store 赋值
+      state.fixedAside = supplementMenuPath(menu)
+    },
     fullAsideSet (state, menu) {
+      // store 赋值
       state.fullAside = supplementMenuPath(menu)
-      state.aside = supplementMenuPath(menu)
+      // state.aside = supplementMenuPath(menu)
     }
   }
 }
